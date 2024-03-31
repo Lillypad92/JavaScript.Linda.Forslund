@@ -33,13 +33,13 @@ function fetchMusicGroups(number) {
     });
 }
 
+
 function pageClick(number) {
   //Clear the list of music groups
   document.getElementById("list-of-items").innerHTML = '';
 
-  // let number = 0
-
   //Fetch new music groups
   fetchMusicGroups(number)
+
 
 }
