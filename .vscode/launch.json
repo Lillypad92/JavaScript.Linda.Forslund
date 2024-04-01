@@ -8,10 +8,6 @@
             "type": "node",
             "request": "launch",
             "name": "node.js debugging",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}\\script\\API\\musicGroup.js"
         }
     ]
 }

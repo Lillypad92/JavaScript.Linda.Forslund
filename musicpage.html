@@ -18,24 +18,32 @@
           somesortofbutton.classList.remove("disabled")
         }
         
-        let pageNumber = e.currentTarget.dataset.page
+        let pageNumber = e.currentTarget.dataset.page;
+        
         if(pageNumber === "1"){
           document.getElementById("prevPage").classList.add("disabled")
         }
         if(pageNumber === "10"){
           document.getElementById("nextPage").classList.add("disabled")
         }
-        if (e.currentTarget.id == "nextPage") {
-          
-          console.log('done');
+        
+        if (e.currentTarget.id === "nextPage") {
+         //1. Hitta sidan som är aktiv
+         
         }
-
 
         pageClick(pageNumber);
         });
       });
     });
 
+    const searchInput = document.getElementById("searchInput");
+    const searchBtn = document.getElementById("searchBtn");
+
+    searchBtn.addEventListener("click", function() {
+      const test = searchInput.value;
+      console.log(test);
+    })
 
 
   </script>
@@ -85,6 +93,9 @@
                 href="musicpage.html"
                 >Music groups</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="viewmusicband.html">View groups</a>
+          </li>
           </ul>
         </div>
       </div>
@@ -95,8 +106,8 @@
         <h2 class="pb-2 border-bottom" id="h2">List of Music bands</h2>
 
         <form class="d-flex" role="search">
-          <input id="myInput" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success" type="submit">Search</button>
+          <input id="searchInput" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button id="searchBtn" class="btn btn-outline-success" type="submit" onclick="search()">Search</button>
         </form>
 
         <div class="row row-cols-1 row-cols-lg-4 align-items-stretch g-4 py-5">

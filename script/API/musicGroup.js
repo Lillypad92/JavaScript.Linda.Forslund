@@ -1,4 +1,4 @@
-const API_MUSICGROUPS_PAGENUMBER = 0
+let API_MUSICGROUPS_PAGENUMBER = 0
 
 function fetchMusicGroups(number) {
 
@@ -27,8 +27,15 @@ function fetchMusicGroups(number) {
           ' ' +
           item.strGenre + 
           '. ';
+
         div.appendChild(p);
         container.appendChild(div);
+
+        let a = document.createElement("a");
+        a.href = `viewmusicband.html?name=${item.name}`;
+        container.appendChild(a);
+        a.appendChild(div);
+        
       }
     });
 }
@@ -38,8 +45,11 @@ function pageClick(number) {
   //Clear the list of music groups
   document.getElementById("list-of-items").innerHTML = '';
 
+  
+
   //Fetch new music groups
   fetchMusicGroups(number)
-
-
 }
+
+
+
