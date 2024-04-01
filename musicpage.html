@@ -7,44 +7,42 @@
         //e is ".page-link"
         document.querySelectorAll(".page-link").forEach(function (e) {
         e.addEventListener("click", function (e) {
-        //Turn off/on active pagination
-        let paginationElement = document.getElementById("pagination")
 
-        paginationElement.querySelector(".active").classList.remove("active")
-        e.currentTarget.classList.add("active")
+        let paginationElement = document.getElementById("pagination")
+        let activeElement = paginationElement.querySelector(".active")
+        let pageNumber = -1
+
+        activeElement.classList.remove("active")
+
+        if (e.currentTarget.id === "nextPage") {
+         pageNumber = parseInt(activeElement.querySelector("[data-page]").dataset.page) + 1
+         paginationElement.querySelector("[data-page='" + pageNumber + "']").parentNode.classList.add("active")
+        }else if (e.currentTarget.id === "prevPage") {
+         pageNumber = parseInt(activeElement.querySelector("[data-page]").dataset.page) - 1
+         paginationElement.querySelector("[data-page='" + pageNumber + "']").parentNode.classList.add("active")
+        }else{
+          e.currentTarget.parentNode.classList.add("active")
+          pageNumber = parseInt(e.currentTarget.dataset.page)
+        }
 
         let somesortofbutton = paginationElement.querySelector(".disabled")
         if(somesortofbutton !== null){
           somesortofbutton.classList.remove("disabled")
         }
         
-        let pageNumber = e.currentTarget.dataset.page;
-        
-        if(pageNumber === "1"){
+        if(pageNumber === 1){
           document.getElementById("prevPage").classList.add("disabled")
         }
-        if(pageNumber === "10"){
+        if(pageNumber === 10){
           document.getElementById("nextPage").classList.add("disabled")
         }
         
-        if (e.currentTarget.id === "nextPage") {
-         //1. Hitta sidan som är aktiv
-         
-        }
-
         pageClick(pageNumber);
         });
       });
     });
 
-    const searchInput = document.getElementById("searchInput");
-    const searchBtn = document.getElementById("searchBtn");
-
-    searchBtn.addEventListener("click", function() {
-      const test = searchInput.value;
-      console.log(test);
-    })
-
+   
 
   </script>
 
@@ -107,7 +105,7 @@
 
         <form class="d-flex" role="search">
           <input id="searchInput" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-          <button id="searchBtn" class="btn btn-outline-success" type="submit" onclick="search()">Search</button>
+          <button id="searchBtn" class="btn btn-outline-success" type="submit">Search</button>
         </form>
 
         <div class="row row-cols-1 row-cols-lg-4 align-items-stretch g-4 py-5">
@@ -129,31 +127,31 @@
             <li class="page-item active">
               <a class="page-link" href="#list-of-items" data-page="1">1</a>
             </li>
-            <li class="page-item ">
+            <li class="page-item">
               <a class="page-link" href="#list-of-items" data-page="2">2</a>
             </li>
-            <li class="page-item ">
+            <li class="page-item">
               <a class="page-link" href="#list-of-items" data-page="3">3</a>
             </li>
-            <li class="page-item ">
+            <li class="page-item">
               <a class="page-link" href="#list-of-items" data-page="4">4</a>
             </li>
-            <li class="page-item ">
+            <li class="page-item">
               <a class="page-link" href="#list-of-items" data-page="5">5</a>
             </li>
-            <li class="page-item ">
+            <li class="page-item">
               <a class="page-link" href="#list-of-items" data-page="6">6</a>
             </li>
-            <li class="page-item ">
+            <li class="page-item">
               <a class="page-link" href="#list-of-items" data-page="7">7</a>
             </li>
-            <li class="page-item ">
+            <li class="page-item">
               <a class="page-link" href="#list-of-items" data-page="8">8</a>
             </li>
-            <li class="page-item ">
+            <li class="page-item">
               <a class="page-link" href="#list-of-items" data-page="9">9</a>
             </li>
-            <li class="page-item ">
+            <li class="page-item">
               <a class="page-link" href="#list-of-items" data-page="10">10</a>
             </li>
             <li class="page-item">
