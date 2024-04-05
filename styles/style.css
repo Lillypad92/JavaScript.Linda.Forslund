@@ -4,3 +4,16 @@
 #h2 {
     font-family: "DynaPuff";
 }
+.container-div {
+    justify-content: center;
+}
+.title {
+}
+.genre {
+    
+}
+.col-md-10, .themed-grid-col {
+    display: flex;
+    text-align: center;
+    justify-content: space-evenly;
+}
