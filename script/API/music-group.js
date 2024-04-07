@@ -1,147 +1,163 @@
-let API_MUSICGROUPS_PAGENUMBER = 0
-let musicGroupItems = [];
+//Pagination
+const paginatedList = document.getElementById("list-of-items");
+const previousButton = document.getElementById("prevPage");
+const nextButton = document.getElementById("nextPage");
 
-function fetchSignleMusicGroup(id){
-  let url = `https://appmusicwebapinet8.azurewebsites.net/api/csMusicGroups/ReadItem?id=${id}&flat=false`
+let musicGroupsElements = null;
+const paginationLimit = 10;
+let pageCount = 0
+let currentPaginationPage = 1;
+//
 
-  fetch(url)
-  .then((response) => {
-    return response.json();
-  })
-  .then((json) => {
+//API
+let totalMusicGroups = -1;
+//
 
-    document.getElementById("musicBandTitle").innerText = json.name;
-    let genre = document.getElementById("genre")
-    setBadgeTheme(json.genre, genre);
-    genre.innerText = json.strGenre
-    document.getElementById("establishedYear").innerText = `Established year: ${json.establishedYear}`;
+async function setupMusicGroups() {
 
-    if(json.albums.length === undefined || json.albums.length === 0){
-      document.getElementById("albumsAccordion").style.display = "none";
-    }else{
-      document.getElementById("albums").innerText= `${json.albums.length} Albums`;
+  document.getElementById("spinner").style.display = "";
 
-      for (const album of json.albums) {
+  let numberOfMusicGroups = await fetchNumberOfMusicGroups();
+  if (numberOfMusicGroups === -1) return;
 
-        let div = document.createElement("div");
-        div.classList.add("accordion-body");
-        let h3 = document.createElement("h3");
-        h3.innerText = album.name;
-        let pReleaseYear = document.createElement("p");
-        pReleaseYear.innerText = `Release year: ${album.releaseYear}`;
-        let pCopiesSold = document.createElement("p");
-        pCopiesSold.innerText = `Copies sold: ${album.copiesSold}`;
+  let musicGroups = await fetchMusicGroups(numberOfMusicGroups);
+  if (musicGroups === null) return;
 
-        div.appendChild(h3);
-        div.appendChild(pReleaseYear);
-        div.appendChild(pCopiesSold);
+  pageCount = Math.ceil(musicGroups.length / paginationLimit);
 
-        document.getElementById("flush-collapseOne").appendChild(div);
-      }
+  createMusicGroupsElement(musicGroups);
+  createPaginationNumbers();
+
+  musicGroupsElements = paginatedList.querySelectorAll("a");
+
+  setCurrentPaginationPage(1);
+
+  document.getElementById("spinner").style.display = ""; //TODO:Make spinner bigger and center where list should be. When fixed, set display to none
+}
+
+async function fetchNumberOfMusicGroups() {
+  let url = "https://appmusicwebapinet8.azurewebsites.net/api/csAdmin/Info";
+  let response = await fetch(url);
+  if (response.ok) {
+    let json = await response.json();
+    return json.nrSeededMusicGroups + json.nrUnseededMusicGroups;
+  } else {
+    console.log("Could not fetch info!");
+    return -1;
+  }
+}
+
+async function fetchMusicGroups(totalMusicGroups) {
+  let url = `https://appmusicwebapinet8.azurewebsites.net/api/csMusicGroups/Read?flat=true&pageSize=${totalMusicGroups}`;
+  let response = await fetch(url);
+  if (response.ok) {
+    let json = await response.json();
+    return json.pageItems;
+  } else {
+    console.log("Could not fetch all music groups!");
+    return null;
+  }
+}
+
+function disableButton(button){
+  button.classList.add("disabled");
+  button.setAttribute("disabled", true);
+}
+
+function enableButton(button){
+  button.classList.remove("disabled");
+  button.removeAttribute("disabled");
+}
+
+function handlePaginationButtonStatus(){
+  if (currentPaginationPage === 1){
+    disableButton(previousButton);
+  }else{
+    enableButton(previousButton);
+  }
+
+  if(pageCount === currentPaginationPage){
+    disableButton(nextButton);
+  }else{
+    enableButton(nextButton);
+  }
+}
+
+function handleActivePaginationPage(){
+  document.querySelectorAll(".page-item").forEach((pagination) => {
+    pagination.classList.remove("active");
+
+    const pageIndex = parseInt(pagination.querySelector("a").dataset.page);
+    if(pageIndex === currentPaginationPage) {
+      pagination.classList.add("active");
     }
-
-    if(json.artists.length === undefined || json.artists.length === 0){
-      document.getElementById("artistsAccordion").style.display = "none";
-    }else{
-      document.getElementById("artists").innerText= `${json.artists.length} Artists`;
-
-      for (const artist of json.artists) {
-
-        let div = document.createElement("div");
-        div.classList.add("accordion-body");
-        let h3 = document.createElement("h3")
-        h3.innerText = `${artist.firstName} ${artist.lastName}`;
-        let pBirthday = document.createElement("p");
-        pBirthday.innerText = `Birthday: ${artist.birthDay === null ? "?" : artist.birthDay}`;
-
-        div.appendChild(h3);
-        div.appendChild(pBirthday);
-
-        document.getElementById("flush-collapseTwo").appendChild(div);
-      } 
-    }  
   })
 }
 
-function fetchMusicGroups(number) {
+function setCurrentPaginationPage(pageNumber) {
+  currentPaginationPage = pageNumber;
 
-  document.getElementById("spinner").style.display = ""
+  handleActivePaginationPage();
+  handlePaginationButtonStatus();
 
-  let url = `https://appmusicwebapinet8.azurewebsites.net/api/csMusicGroups/Read?flat=true&pageNr=${number}&pageSize=10`
+  const previousRange = (pageNumber - 1) * paginationLimit;
+  const currentRange = pageNumber * paginationLimit;
 
-  fetch(url)
-    .then((response) => {
-      return response.json();
-    })
-    .then((json) => {
-      
-      createMusicList(json.pageItems);
-
-      musicGroupItems = json.pageItems;
-
-    });
+  musicGroupsElements.forEach((item, index) => {
+    item.style.display = "none";
+    if (index >= previousRange && index < currentRange) {
+      item.style.display = "";
+    }
+  });
 }
-function createMusicList(pageItems) {
-  
-  for (const item of pageItems) {
+
+function createPaginationNumbers() {
+  for (let i = 1; i <= pageCount; i++) {
+    let li = document.createElement("li");
+    li.classList.add("page-item");
+
+    let link = document.createElement("a");
+    link.classList.add("page-link");
+    link.href = "#list-of-items";
+    link.dataset.page = i;
+    link.addEventListener("click", () => {
+      setCurrentPaginationPage(i);
+    })
+    link.innerText = i;
+    li.appendChild(link);
+    document.getElementById("nextPageContainer").before(li)
+  }
+}
+
+function createMusicGroupsElement(musicGroups) {
+  for (let musicGroup of musicGroups) {
     let div = document.createElement("div");
     div.classList.add("col-md-10", "themed-grid-col");
-    let container = document.getElementById("list-of-items");
-    
+
     let pTitle = document.createElement("p");
-    pTitle.innerText = item.name
+    pTitle.innerText = musicGroup.name;
     div.appendChild(pTitle);
-    container.appendChild(div);
-    
+
     let pEstablishedYear = document.createElement("p");
-    pEstablishedYear.innerText = `Etablerades ${item.establishedYear}`;
+    pEstablishedYear.innerText = `Etablerades ${musicGroup.establishedYear}`;
     div.appendChild(pEstablishedYear);
-    container.appendChild(div);
 
     let spanGenre = document.createElement("span");
-    setBadgeTheme(item.genre, spanGenre);
-    spanGenre.innerText = item.strGenre;
+    setBadgeTheme(musicGroup.genre, spanGenre);
+    spanGenre.innerText = musicGroup.strGenre;
     div.appendChild(spanGenre);
-    container.appendChild(div);
 
     let a = document.createElement("a");
-    a.href = `view-music-band.html?id=${item.musicGroupId}`;
-    container.appendChild(a);
-    a.appendChild(div);  
+    a.href = `view-music-band.html?id=${musicGroup.musicGroupId}`;
+    a.appendChild(div);
 
-    document.getElementById("spinner").style.display = "none"; 
+    paginatedList.appendChild(a);
   }
 }
 
-function setBadgeTheme(genre, span){
-  switch(genre){
-    case 1: span.classList.add("badge", "bg-primary"); break; 
-    case 2: span.classList.add("badge", "bg-success"); break;
-    case 3: span.classList.add("badge", "bg-danger"); break;
-    default: span.classList.add("badge", "bg-warning", "text-dark"); break;
-  }
-}
-
-function pageClick(number) {
-  //Clear the list of music groups
-  document.getElementById("list-of-items").innerHTML = "";
-
-  //Fetch new music groups
-  fetchMusicGroups(number)
-}
 function searchMusicGroup() {
   let inputField = document.getElementById("searchInput");
   let inputValue = inputField.value;
 
-  let filteredMusicGroup = musicGroupItems.filter((x) => {
-    if (x.name.includes(inputValue)) {
-      return x
-    }
-    
-  });
-  document.getElementById("list-of-items").innerHTML = "";
-
-  createMusicList(filteredMusicGroup)
+  searchAllMusicGroups();
 }
-
-

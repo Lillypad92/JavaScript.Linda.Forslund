@@ -1,54 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
   <script>
-    window.addEventListener("load", function (e) {
-      fetchMusicGroups(API_MUSICGROUPS_PAGENUMBER);
+    window.addEventListener("load", function (e) {      
+      setupMusicGroups()
 
-      //e is ".page-link"
-      document.querySelectorAll(".page-link").forEach(function (e) {
-        e.addEventListener("click", function (e) {
-          let paginationElement = document.getElementById("pagination");
-          let activeElement = paginationElement.querySelector(".active");
-          let pageNumber = -1;
-
-          activeElement.classList.remove("active");
-
-          if (e.currentTarget.id === "nextPage") {
-            pageNumber =
-              parseInt(
-                activeElement.querySelector("[data-page]").dataset.page
-              ) + 1;
-            paginationElement
-              .querySelector("[data-page='" + pageNumber + "']")
-              .parentNode.classList.add("active");
-          } else if (e.currentTarget.id === "prevPage") {
-            pageNumber =
-              parseInt(
-                activeElement.querySelector("[data-page]").dataset.page
-              ) - 1;
-            paginationElement
-              .querySelector("[data-page='" + pageNumber + "']")
-              .parentNode.classList.add("active");
-          } else {
-            e.currentTarget.parentNode.classList.add("active");
-            pageNumber = parseInt(e.currentTarget.dataset.page);
-          }
-
-          let somesortofbutton = paginationElement.querySelector(".disabled");
-          if (somesortofbutton !== null) {
-            somesortofbutton.classList.remove("disabled");
-          }
-
-          if (pageNumber === 1) {
-            document.getElementById("prevPage").classList.add("disabled");
-          }
-          if (pageNumber === 10) {
-            document.getElementById("nextPage").classList.add("disabled");
-          }
-
-          pageClick(pageNumber);
-        });
+      document.getElementById("nextPage").addEventListener("click", () =>{
+        setCurrentPaginationPage(currentPaginationPage + 1);
       });
+
+      document.getElementById("prevPage").addEventListener("click", () =>{
+        setCurrentPaginationPage(currentPaginationPage - 1);
+      })
     });
   </script>
 
@@ -105,42 +67,12 @@
             </div>
             <nav aria-label="Standard pagination example">
               <ul class="pagination" id="pagination">
-                <li class="page-item disabled">
+                <li class="page-item">
                   <a class="page-link" href="#list-of-items" aria-label="Previous" id="prevPage">
                     <span aria-hidden="true">&laquo;</span>
                   </a>
                 </li>
-                <li class="page-item active">
-                  <a class="page-link" href="#list-of-items" data-page="1">1</a>
-                </li>
-                <li class="page-item">
-                  <a class="page-link" href="#list-of-items" data-page="2">2</a>
-                </li>
-                <li class="page-item">
-                  <a class="page-link" href="#list-of-items" data-page="3">3</a>
-                </li>
-                <li class="page-item">
-                  <a class="page-link" href="#list-of-items" data-page="4">4</a>
-                </li>
-                <li class="page-item">
-                  <a class="page-link" href="#list-of-items" data-page="5">5</a>
-                </li>
-                <li class="page-item">
-                  <a class="page-link" href="#list-of-items" data-page="6">6</a>
-                </li>
-                <li class="page-item">
-                  <a class="page-link" href="#list-of-items" data-page="7">7</a>
-                </li>
-                <li class="page-item">
-                  <a class="page-link" href="#list-of-items" data-page="8">8</a>
-                </li>
-                <li class="page-item">
-                  <a class="page-link" href="#list-of-items" data-page="9">9</a>
-                </li>
-                <li class="page-item">
-                  <a class="page-link" href="#list-of-items" data-page="10">10</a>
-                </li>
-                <li class="page-item">
+                <li class="page-item" id="nextPageContainer">
                   <a class="page-link" href="#list-of-items" aria-label="Next" id="nextPage">
                     <span aria-hidden="true">&raquo;</span>
                   </a>
@@ -152,6 +84,7 @@
 
       </div>
     </main>
+    <script type="text/javascript" src="./script/helper.js"></script>
     <script type="text/javascript" src="./script/API/music-group.js"></script>
   </body>
 </html>
