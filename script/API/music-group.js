@@ -7,11 +7,9 @@ let musicGroupsElements = null;
 const paginationLimit = 10;
 let pageCount = 0
 let currentPaginationPage = 1;
-//
 
 //API
 let totalMusicGroups = -1;
-//
 
 async function setupMusicGroups() {
 
@@ -157,7 +155,12 @@ function createMusicGroupsElement(musicGroups) {
 
 function searchMusicGroup() {
   let inputField = document.getElementById("searchInput");
+  let listItems = document.querySelectorAll("page-item");
   let inputValue = inputField.value;
-
-  searchAllMusicGroups();
+  if (inputField.value === inputValue.toLowerCase() || inputField.value === inputValue.toLowerCase) {
+    let test = listItems.filter(function (el) {
+      
+    })
+  }
 }
+
