@@ -2,24 +2,30 @@
 const paginatedList = document.getElementById("list-of-items");
 const previousButton = document.getElementById("prevPage");
 const nextButton = document.getElementById("nextPage");
+//
+const musicBandTitleElement = document.getElementById("musicBandTitle");
 
 let musicGroupsElements = null;
 const paginationLimit = 10;
 let pageCount = 0
 let currentPaginationPage = 1;
 
-//API
 let totalMusicGroups = -1;
 
-async function setupMusicGroups() {
 
-  document.getElementById("spinner").style.display = "";
+
+//Search test
+let musicGroups = []
+
+async function setupMusicGroups() {
 
   let numberOfMusicGroups = await fetchNumberOfMusicGroups();
   if (numberOfMusicGroups === -1) return;
 
-  let musicGroups = await fetchMusicGroups(numberOfMusicGroups);
+  musicGroups = await fetchMusicGroups(numberOfMusicGroups);
   if (musicGroups === null) return;
+
+  musicBandTitleElement.innerText = `Music bands ${musicGroups.length}`;
 
   pageCount = Math.ceil(musicGroups.length / paginationLimit);
 
@@ -29,8 +35,6 @@ async function setupMusicGroups() {
   musicGroupsElements = paginatedList.querySelectorAll("a");
 
   setCurrentPaginationPage(1);
-
-  document.getElementById("spinner").style.display = ""; //TODO:Make spinner bigger and center where list should be. When fixed, set display to none
 }
 
 async function fetchNumberOfMusicGroups() {
@@ -109,10 +113,12 @@ function setCurrentPaginationPage(pageNumber) {
   });
 }
 
+
 function createPaginationNumbers() {
   for (let i = 1; i <= pageCount; i++) {
     let li = document.createElement("li");
     li.classList.add("page-item");
+    li.id = "paginationButton";
 
     let link = document.createElement("a");
     link.classList.add("page-link");
@@ -126,6 +132,8 @@ function createPaginationNumbers() {
     document.getElementById("nextPageContainer").before(li)
   }
 }
+
+
 
 function createMusicGroupsElement(musicGroups) {
   for (let musicGroup of musicGroups) {
@@ -153,14 +161,62 @@ function createMusicGroupsElement(musicGroups) {
   }
 }
 
-function searchMusicGroup() {
-  let inputField = document.getElementById("searchInput");
-  let listItems = document.querySelectorAll("page-item");
-  let inputValue = inputField.value;
-  if (inputField.value === inputValue.toLowerCase() || inputField.value === inputValue.toLowerCase) {
-    let test = listItems.filter(function (el) {
-      
-    })
+function removeFilter(){
+  //Remove old stuff
+  document.getElementById("btnRemoveFilter").style.display = "none";
+  document.getElementById("searchInput").value = "";
+  paginatedList.innerHTML = ""
+  let paginationButtons = document.getElementById("pagination").querySelectorAll("#paginationButton");
+  for(let button of paginationButtons){
+    button.remove();
   }
+  //
+
+  pageCount = Math.ceil(musicGroups.length / paginationLimit);
+
+  createMusicGroupsElement(musicGroups);
+  createPaginationNumbers();
+
+  musicGroupsElements = paginatedList.querySelectorAll("a");
+
+  setCurrentPaginationPage(1);
+
+  musicBandTitleElement.innerText = `Music bands ${musicGroups.length}`;
 }
 
+function searchMusicGroup() {
+
+  document.getElementById("btnRemoveFilter").style.display = "";
+
+  let inputValue = document.getElementById("searchInput").value;
+
+  let filteredMusicGroups = []
+
+  for(let musicGroup of musicGroups){
+
+    let musicGroupName = musicGroup.name.toLowerCase();
+
+    if(musicGroupName.includes(inputValue.toLowerCase())){
+      filteredMusicGroups.push(musicGroup);
+    }
+  }
+
+  musicBandTitleElement.innerText = `Music bands ${filteredMusicGroups.length}`;
+
+  //Remove old stuff
+  paginatedList.innerHTML = ""
+  let paginationButtons = document.getElementById("pagination").querySelectorAll("#paginationButton");
+  for(let button of paginationButtons){
+    button.remove();
+  }
+  //
+
+  pageCount = Math.ceil(filteredMusicGroups.length / paginationLimit);
+
+  createMusicGroupsElement(filteredMusicGroups);
+  createPaginationNumbers();
+
+  musicGroupsElements = paginatedList.querySelectorAll("a");
+
+  setCurrentPaginationPage(1);
+}

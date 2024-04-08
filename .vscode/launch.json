@@ -11,7 +11,28 @@
             "skipFiles": [
                 "<node_internals>/**"
             ], 
-            
+            "program": "${workspaceFolder}/${relativeFile}"
+        }, 
+        {
+            "type": "chrome", 
+            "request": "launch",
+            "name": "Chrome index.html",
+            "url": "http://localhost:5050/${relativeFileDirname}/index.html",
+            "webRoot": "${workspaceFolder}"
+        },
+        {
+            "type": "chrome", 
+            "request": "launch",
+            "name": "Chrome music-page.html",
+            "url": "http://localhost:5050/${relativeFileDirname}/music-page.html",
+            "webRoot": "${workspaceFolder}"
+        },
+        {
+            "type": "chrome", 
+            "request": "launch",
+            "name": "Chrome view-music-page.html",
+            "url": "http://localhost:5050/${relativeFileDirname}/view-music-page.html",
+            "webRoot": "${workspaceFolder}"
         }
     ]
 }
