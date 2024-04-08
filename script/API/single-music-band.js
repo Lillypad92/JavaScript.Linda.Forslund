@@ -65,3 +65,4 @@
       console.log("Could not fetch!");
     }
   }
+  console.log("hello");

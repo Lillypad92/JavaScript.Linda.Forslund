@@ -23,8 +23,8 @@
         {
             "type": "chrome", 
             "request": "launch",
-            "name": "Chrome music-page.html",
-            "url": "http://localhost:5050/${relativeFileDirname}/music-page.html",
+            "name": "Chrome music-band-page.html",
+            "url": "http://localhost:5050/${relativeFileDirname}/music-band-page.html",
             "webRoot": "${workspaceFolder}"
         },
         {

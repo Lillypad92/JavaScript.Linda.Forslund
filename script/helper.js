@@ -14,3 +14,4 @@ function setBadgeTheme(genre, span) {
         break;
     }
   }
+  console.log("hello");

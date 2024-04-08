@@ -12,8 +12,7 @@ let currentPaginationPage = 1;
 
 let totalMusicGroups = -1;
 
-
-
+console.log("hello");
 //Search test
 let musicGroups = []
 
@@ -112,8 +111,6 @@ function setCurrentPaginationPage(pageNumber) {
     }
   });
 }
-
-
 function createPaginationNumbers() {
   for (let i = 1; i <= pageCount; i++) {
     let li = document.createElement("li");
@@ -132,9 +129,6 @@ function createPaginationNumbers() {
     document.getElementById("nextPageContainer").before(li)
   }
 }
-
-
-
 function createMusicGroupsElement(musicGroups) {
   for (let musicGroup of musicGroups) {
     let div = document.createElement("div");
