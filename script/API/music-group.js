@@ -11,8 +11,6 @@ let pageCount = 0
 let currentPaginationPage = 1;
 
 let totalMusicGroups = -1;
-
-console.log("hello");
 //Search test
 let musicGroups = []
 

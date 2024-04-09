@@ -16,22 +16,22 @@
         {
             "type": "chrome", 
             "request": "launch",
-            "name": "Chrome index.html",
-            "url": "http://localhost:5050/${relativeFileDirname}/index.html",
+            "name": "Chrome ../index.html",
+            "url": "http://localhost:5500/${relativeFileDirname}/../index.html",
             "webRoot": "${workspaceFolder}"
         },
         {
             "type": "chrome", 
             "request": "launch",
             "name": "Chrome music-band-page.html",
-            "url": "http://localhost:5050/${relativeFileDirname}/music-band-page.html",
+            "url": "http://localhost:5500/${relativeFileDirname}/music-band-page.html",
             "webRoot": "${workspaceFolder}"
         },
         {
             "type": "chrome", 
             "request": "launch",
             "name": "Chrome view-music-page.html",
-            "url": "http://localhost:5050/${relativeFileDirname}/view-music-page.html",
+            "url": "http://localhost:5500/../${relativeFileDirname}/../view-music-page.html",
             "webRoot": "${workspaceFolder}"
         }
     ]
